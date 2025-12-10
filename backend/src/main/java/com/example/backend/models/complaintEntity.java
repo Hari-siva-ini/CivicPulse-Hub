@@ -1,0 +1,109 @@
+package com.example.backend.models;
+
+import java.sql.Date;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "complaints")
+public class complaintEntity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String title;
+    private String description;
+    private String category;
+    private String location;
+    private String email;
+    private String status;
+    private Date deadline;
+    private String officer;
+    private Date submitDate;
+    private int rate;
+    private String Feedback;
+    private String Zone;
+    
+    public String getZone() {
+		return Zone;
+	}
+	public void setZone(String zone) {
+		Zone = zone;
+	}
+	public String getFeedback() {
+		return Feedback;
+	}
+	public void setFeedback(String feedback) {
+		Feedback = feedback;
+	}
+	public int getRate() {
+		return rate;
+	}
+	public void setRate(int rate) {
+		this.rate = rate;
+	}
+	public Date getSubmitDate() {
+		return submitDate;
+	}
+	public void setSubmitDate(Date submitDate) {
+		this.submitDate = submitDate;
+	}
+	public String getOfficer() {
+		return officer;
+	}
+	public void setOfficer(String officer) {
+		this.officer = officer;
+	}
+	public Date getDeadline() {
+		return deadline;
+	}
+	public void setDeadline(Date deadline) {
+		this.deadline = deadline;
+	}
+    public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	@Lob
+    @Column(columnDefinition = "LONGTEXT")
+    private String imageUrl;
+	 @Lob
+	 @Column(columnDefinition = "LONGTEXT")
+	private String submitProff;
+
+    // Getters & Setters
+    public Long getId() { return id; }
+    public String getSubmitProff() {
+		return submitProff;
+	}
+	public void setSubmitProff(String submitProff) {
+		this.submitProff = submitProff;
+	}
+	public void setId(Long id) { this.id = id; }
+
+    public String getTitle() { return title; }
+    public void setTitle(String title) { this.title = title; }
+
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
+
+    public String getCategory() { return category; }
+    public void setCategory(String category) { this.category = category; }
+
+    public String getLocation() { return location; }
+    public void setLocation(String location) { this.location = location; }
+
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
+
+    public String getImageUrl() { return imageUrl; }
+    public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
+}

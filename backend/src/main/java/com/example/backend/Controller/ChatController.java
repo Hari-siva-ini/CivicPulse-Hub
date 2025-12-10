@@ -1,0 +1,60 @@
+package com.example.backend.Controller;
+
+import com.example.backend.models.ChatRequest;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
+
+import java.util.Map;
+
+@RestController
+@RequestMapping("/api/chat")
+@CrossOrigin(origins = "*")
+public class ChatController {
+
+    @Value("${gemini.api.key}")
+    private String apiKey;
+
+    private final WebClient webClient = WebClient.builder()
+            .baseUrl("https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent")
+            .build();
+
+    @PostMapping("/ask")
+    public Mono<Map<String, String>> ask(@RequestBody ChatRequest request) {
+
+        return webClient.post()
+                .uri("?key=" + apiKey)
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(
+                        Map.of("contents",
+                                new Object[]{
+                                        Map.of("parts",
+                                                new Object[]{
+                                                        Map.of("text", request.getMessage())
+                                                })
+                                })
+                )
+                .retrieve()
+                .bodyToMono(Map.class)
+                .map(response -> {
+                    try {
+                        var candidates = (java.util.List<?>) response.get("candidates");
+                        var c0 = (Map<?, ?>) candidates.get(0);
+                        var content = (Map<?, ?>) c0.get("content");
+                        var parts = (java.util.List<?>) content.get("parts");
+                        var p0 = (Map<?, ?>) parts.get(0);
+                        String text = (String) p0.get("text");
+
+                        return Map.of("response", text);
+
+                    } catch (Exception e) {
+                        return Map.of("response", "⚠️ Parsing Error: " + e.getMessage());
+                    }
+                })
+                .onErrorResume(e ->
+                        Mono.just(Map.of("response", "⚠️ API Error: " + e.getMessage()))
+                );
+    }
+}
